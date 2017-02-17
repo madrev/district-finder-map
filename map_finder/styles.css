@@ -23,19 +23,20 @@ html, body {
 
 .info {
   position: absolute;
-  bottom: 10px;
+  top: 10px;
   left: 10px;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: space-around;
   z-index: 44;
-}
-
-.rep-results, .zip-box {
-  width: 300px;
   padding: 20px;
   background-color: #dcdfe5;
   border-radius: 5px;
+  width: 300px;
+}
+
+.rep-results, .zip-box {
+
 }
 
 .zip-box {
