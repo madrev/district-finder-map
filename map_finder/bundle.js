@@ -76,6 +76,10 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.geocode = exports.initMap = undefined;
+
+var _rep_display = __webpack_require__(3);
+
 var map = void 0;
 
 var initMap = exports.initMap = function initMap() {
@@ -102,12 +106,15 @@ var initMap = exports.initMap = function initMap() {
   });
 
   var infowindow = new google.maps.InfoWindow();
+
   map.data.addListener('click', function (event) {
+    window.feature = event.feature;
     var districtNum = event.feature.f["CD115FP"];
     var districtType = districtNum == "00" ? "at large" : 'District ' + districtNum;
     infowindow.setPosition(event.latLng);
     infowindow.setContent(event.feature.f["STATE"] + ' ' + districtType);
     infowindow.open(map);
+    (0, _rep_display.displayRep)(event.feature.f["REP"]);
   });
 };
 
@@ -204,6 +211,24 @@ $(function () {
     return false;
   });
 });
+
+/***/ }),
+/* 3 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+var displayRep = exports.displayRep = function displayRep(rep) {
+  $(".rep-name").text("Your rep is " + rep.first_name + " " + rep.last_name);
+  $(".rep-party").text("Party: " + rep.party);
+  $(".rep-phone").text("Phone: " + rep.phone);
+  $(".rep-website").text("Website: " + rep.website);
+  $(".rep-twitter").text("Twitter: " + rep.twitter_id);
+};
 
 /***/ })
 /******/ ]);

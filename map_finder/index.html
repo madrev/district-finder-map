@@ -11,13 +11,27 @@
 
   <body>
     <div id="map"></div>
-    <div class="zip-box">
+    <section class="zip-box">
       <form class="zip-entry">
         <input type="text" class="zip-field" name="zip" placeholder="Your ZIP code"><br><br>
         <input type="submit" class="submit-button" value="Find your home district">
       </form>
       <div id="district-results"></div>
-    </div>
+    </section>
+    <section class="rep-results">
+      <div class="no-rep-results">
+        <h3>Select a district to see your representative in the House.</h3>
+      </div>
+      <div class="rep-display hidden">
+        <h3 class="rep-name"></h3>
+        <h4 class="rep-party">Party:</h4>
+        <h4 class="rep-phone">Phone:</h4>
+        <h4 class="rep-website">Website:</h4>
+        <h4 class="rep-twitter">Twitter:</h4>
+      </div>
+
+
+    </section>
 
     <script src="./bundle.js" type="text/javascript"></script>
   </body>

@@ -1,3 +1,5 @@
+import { displayRep } from './rep_display.js';
+
 let map;
 
 export const initMap = () => {
@@ -24,13 +26,16 @@ map.data.setStyle( feature => {
   };
 });
 
-const infowindow = new google.maps.InfoWindow;
-    map.data.addListener('click', function(event) {
-    let districtNum = event.feature.f["CD115FP"];
-    let districtType = (districtNum == "00" ? "at large" : `District ${districtNum}`);
-    infowindow.setPosition(event.latLng);
-    infowindow.setContent(`${event.feature.f["STATE"]} ${districtType}`);
-    infowindow.open(map);
+  const infowindow = new google.maps.InfoWindow;
+
+  map.data.addListener('click', function(event) {
+  window.feature = event.feature;
+  let districtNum = event.feature.f["CD115FP"];
+  let districtType = (districtNum == "00" ? "at large" : `District ${districtNum}`);
+  infowindow.setPosition(event.latLng);
+  infowindow.setContent(`${event.feature.f["STATE"]} ${districtType}`);
+  infowindow.open(map);
+  displayRep(event.feature.f["REP"]);
   });
 };
 
