@@ -20,5 +20,10 @@
   "homepage": "https://github.com/madrev/sister_district_sandbox#readme",
   "dependencies": {
     "node-fetch": "^1.6.3"
+  },
+  "devDependencies": {
+    "node-sass": "^4.5.0",
+    "sass-loader": "^6.0.1",
+    "webpack": "^2.2.1"
   }
 }

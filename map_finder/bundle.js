@@ -85,7 +85,8 @@ var map = void 0;
 var initMap = exports.initMap = function initMap() {
   map = new google.maps.Map(document.getElementById('map'), {
     zoom: 4,
-    center: { lat: 37.0902, lng: -95.71 }
+    center: { lat: 37.0902, lng: -95.71 },
+    mapTypeControl: false
   });
 
   map.data.loadGeoJson('https://raw.githubusercontent.com/madrev/sister_district_sandbox/master/reps_added.json');
@@ -228,6 +229,8 @@ var displayRep = exports.displayRep = function displayRep(rep) {
   $(".rep-phone").text("Phone: " + rep.phone);
   $(".rep-website").text("Website: " + rep.website);
   $(".rep-twitter").text("Twitter: " + rep.twitter_id);
+  $(".rep-display").removeClass("hidden");
+  $(".no-rep-results").addClass("hidden");
 };
 
 /***/ })

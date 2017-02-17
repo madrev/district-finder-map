@@ -4,5 +4,6 @@ export const displayRep = rep => {
   $(".rep-phone").text(`Phone: ${rep.phone}`);
   $(".rep-website").text(`Website: ${rep.website}`);
   $(".rep-twitter").text(`Twitter: ${rep.twitter_id}`);
-
+  $(".rep-display").removeClass("hidden");
+  $(".no-rep-results").addClass("hidden");
 };

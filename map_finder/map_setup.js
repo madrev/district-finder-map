@@ -5,7 +5,8 @@ let map;
 export const initMap = () => {
   map = new google.maps.Map(document.getElementById('map'), {
     zoom: 4,
-    center: {lat: 37.0902, lng: -95.71}
+    center: {lat: 37.0902, lng: -95.71},
+    mapTypeControl: false,
   });
 
 

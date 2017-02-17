@@ -1,5 +1,11 @@
+.content {
+  position: relative;
+  height: 100%;
+}
+
 #map {
-  height: 50%;
+  height: 100%;
+  /*position: absolute;*/
 }
 
 html, body {
@@ -11,13 +17,32 @@ html, body {
   font-weight: 300;
 
 }
+.hidden {
+  display: none;
+}
+
+.info {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  z-index: 44;
+}
+
+.rep-results, .zip-box {
+  width: 300px;
+  padding: 20px;
+  background-color: #dcdfe5;
+  border-radius: 5px;
+}
 
 .zip-box {
   display: flex;
   flex-direction: column;
   align-items: center;
   padding: 50px 20px;
-  margin: 0 auto;
 
 }
 
