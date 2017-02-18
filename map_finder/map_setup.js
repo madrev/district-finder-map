@@ -1,4 +1,5 @@
 import { displayRep } from './rep_display.js';
+import { hideResults } from './zip_finder.js';
 
 let map;
 
@@ -9,23 +10,23 @@ export const initMap = () => {
     mapTypeControl: false,
   });
 
+  let dataUrl = 'https://raw.githubusercontent.com/madrev/sister_district_sandbox/master/reps_added.json';
+  map.data.loadGeoJson(dataUrl, null, () => $("#overlay").addClass("hidden"));
 
-map.data.loadGeoJson('https://raw.githubusercontent.com/madrev/sister_district_sandbox/master/reps_added.json');
-
-map.data.setStyle( feature => {
-  let color = 'gray';
-  if(feature.f["REP"]) {
-    if(feature.f["REP"].party === "D") {
-      color="blue";
-    } else if(feature.f["REP"].party === "R"){
-      color="red";
+  map.data.setStyle( feature => {
+    let color = 'gray';
+    if(feature.f["REP"]) {
+      if(feature.f["REP"].party === "D") {
+        color="blue";
+      } else if(feature.f["REP"].party === "R"){
+        color="red";
+      }
     }
-  }
-  return{
-    fillColor: color,
-    strokeWeight: 0.35
-  };
-});
+    return {
+      fillColor: color,
+      strokeWeight: 0.35
+    };
+  });
 
   const infowindow = new google.maps.InfoWindow;
 
@@ -37,13 +38,16 @@ map.data.setStyle( feature => {
   infowindow.setContent(`${event.feature.f["STATE"]} ${districtType}`);
   infowindow.open(map);
   displayRep(event.feature.f["REP"]);
+  hideResults();
   });
+
+
 };
 
 const zoomTo = (lat, lng) => {
   let loc = new google.maps.LatLng(lat, lng);
   map.setCenter(loc);
-  map.setZoom(13);
+  map.setZoom(12);
 }
 window.zoomTo = zoomTo;
 

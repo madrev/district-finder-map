@@ -80,6 +80,8 @@ exports.geocode = exports.initMap = undefined;
 
 var _rep_display = __webpack_require__(3);
 
+var _zip_finder = __webpack_require__(1);
+
 var map = void 0;
 
 var initMap = exports.initMap = function initMap() {
@@ -89,7 +91,10 @@ var initMap = exports.initMap = function initMap() {
     mapTypeControl: false
   });
 
-  map.data.loadGeoJson('https://raw.githubusercontent.com/madrev/sister_district_sandbox/master/reps_added.json');
+  var dataUrl = 'https://raw.githubusercontent.com/madrev/sister_district_sandbox/master/reps_added.json';
+  map.data.loadGeoJson(dataUrl, null, function () {
+    return $("#overlay").addClass("hidden");
+  });
 
   map.data.setStyle(function (feature) {
     var color = 'gray';
@@ -116,13 +121,14 @@ var initMap = exports.initMap = function initMap() {
     infowindow.setContent(event.feature.f["STATE"] + ' ' + districtType);
     infowindow.open(map);
     (0, _rep_display.displayRep)(event.feature.f["REP"]);
+    (0, _zip_finder.hideResults)();
   });
 };
 
 var zoomTo = function zoomTo(lat, lng) {
   var loc = new google.maps.LatLng(lat, lng);
   map.setCenter(loc);
-  map.setZoom(13);
+  map.setZoom(12);
 };
 window.zoomTo = zoomTo;
 
@@ -146,10 +152,11 @@ var geocode = exports.geocode = function geocode(zip) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.hideResults = exports.retrieveDistrict = undefined;
 
 var _map_setup = __webpack_require__(0);
 
-var retrieveDistrict = function retrieveDistrict(zip) {
+var retrieveDistrict = exports.retrieveDistrict = function retrieveDistrict(zip) {
   return $.ajax({
     method: "GET",
     url: "https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20json%20where%20url%3D%22https%3A%2F%2Fcongress.api.sunlightfoundation.com%2Fdistricts%2Flocate%3Fzip%3D" + zip + "%22&format=json&diagnostics=true&callback=",
@@ -170,17 +177,22 @@ var appendResults = function appendResults(res) {
     districtText = $("<p></p>").text("We couldn't find districts for that ZIP code. Please check your entry and try again.");
   } else {
     var resultArr = jsonResults.results;
-    districtText = $("<div></div>").html("\n        <p>Your ZIP code crosses " + jsonResults.count + " districts:</p>\n      ");
+    districtText = $("<div></div>").html("\n      <p>Your ZIP code crosses " + jsonResults.count + " districts:</p>\n    ");
     var districtList = $("<ul></ul>");
     resultArr.forEach(function (result) {
       return districtList.append("<li>" + result.state + "-" + result.district + "</li>");
     });
     districtText.append(districtList);
-    var mapReferenceText = $("<p></p>").text("Click on your neighborhood on the map above to reveal your district.");
+    var mapReferenceText = $("<p></p>").text("Click on your neighborhood on the map to reveal your district.");
     districtText.append(mapReferenceText);
   }
 
   $("#district-results").html(districtText);
+  $("#district-results").removeClass("hidden");
+};
+
+var hideResults = exports.hideResults = function hideResults() {
+  $("#district-results").addClass("hidden");
 };
 
 exports.default = retrieveDistrict;
@@ -196,9 +208,7 @@ var _map_setup = __webpack_require__(0);
 
 var _zip_finder = __webpack_require__(1);
 
-var _zip_finder2 = _interopRequireDefault(_zip_finder);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+var _rep_display = __webpack_require__(3);
 
 window.initMap = _map_setup.initMap;
 
@@ -208,7 +218,8 @@ $(function () {
     e.preventDefault();
     var zip = e.target.zip.value;
     (0, _map_setup.geocode)(String(zip));
-    (0, _zip_finder2.default)(zip);
+    (0, _zip_finder.retrieveDistrict)(zip);
+    (0, _rep_display.hideRep)();
     return false;
   });
 });
@@ -224,13 +235,18 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 var displayRep = exports.displayRep = function displayRep(rep) {
-  $(".rep-name").text("Your rep is " + rep.first_name + " " + rep.last_name);
-  $(".rep-party").text("Party: " + rep.party);
-  $(".rep-phone").text("Phone: " + rep.phone);
-  $(".rep-website").text("Website: " + rep.website);
-  $(".rep-twitter").text("Twitter: " + rep.twitter_id);
-  $(".rep-display").removeClass("hidden");
-  $(".no-rep-results").addClass("hidden");
+  $("#rep-name").text("Your rep is " + rep.first_name + " " + rep.last_name);
+  $("#rep-party").html("<strong>Party:</strong> " + rep.party);
+  $("#rep-phone").html("<strong>Phone:</strong> " + rep.phone);
+  $("#rep-website").html("<strong>Website:</strong> " + rep.website);
+  $("#rep-twitter").html("<strong>Twitter:</strong> " + rep.twitter_id);
+  $("#rep-display").removeClass("hidden");
+  $("#no-rep-results").addClass("hidden");
+};
+
+var hideRep = exports.hideRep = function hideRep() {
+  $("#rep-display").addClass("hidden");
+  $("#no-rep-results").removeClass("hidden");
 };
 
 /***/ })

@@ -1,5 +1,6 @@
 import { initMap, geocode } from "./map_setup.js";
-import retrieveDistrict from "./zip_finder.js";
+import { retrieveDistrict } from "./zip_finder.js";
+import { hideRep } from "./rep_display.js";
 
 window.initMap = initMap;
 
@@ -12,6 +13,7 @@ $( () => {
       let zip = e.target.zip.value;
       geocode(String(zip));
       retrieveDistrict(zip);
+      hideRep();
       return false;
     });
   });
