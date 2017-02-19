@@ -1,6 +1,10 @@
 import { displayRep } from './rep_display.js';
 import { hideResults } from './zip_finder.js';
 
+const hideOverlay = () => {
+  window.setTimeout( () => $("#overlay").remove(), 1000 );
+};
+
 let map;
 
 export const initMap = () => {
@@ -11,7 +15,7 @@ export const initMap = () => {
   });
 
   let dataUrl = 'https://raw.githubusercontent.com/madrev/sister_district_sandbox/master/reps_added.json';
-  map.data.loadGeoJson(dataUrl, null, () => $("#overlay").addClass("hidden"));
+  map.data.loadGeoJson(dataUrl, null, hideOverlay);
 
   map.data.setStyle( feature => {
     let color = 'gray';

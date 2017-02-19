@@ -63,7 +63,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 2);
+/******/ 	return __webpack_require__(__webpack_require__.s = 3);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -78,9 +78,15 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.geocode = exports.initMap = undefined;
 
-var _rep_display = __webpack_require__(3);
+var _rep_display = __webpack_require__(1);
 
-var _zip_finder = __webpack_require__(1);
+var _zip_finder = __webpack_require__(2);
+
+var hideOverlay = function hideOverlay() {
+  window.setTimeout(function () {
+    return $("#overlay").remove();
+  }, 1000);
+};
 
 var map = void 0;
 
@@ -92,9 +98,7 @@ var initMap = exports.initMap = function initMap() {
   });
 
   var dataUrl = 'https://raw.githubusercontent.com/madrev/sister_district_sandbox/master/reps_added.json';
-  map.data.loadGeoJson(dataUrl, null, function () {
-    return $("#overlay").addClass("hidden");
-  });
+  map.data.loadGeoJson(dataUrl, null, hideOverlay);
 
   map.data.setStyle(function (feature) {
     var color = 'gray';
@@ -152,6 +156,31 @@ var geocode = exports.geocode = function geocode(zip) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+var displayRep = exports.displayRep = function displayRep(rep) {
+  $("#rep-name").text("Your rep is " + rep.first_name + " " + rep.last_name);
+  $("#rep-party").html("<strong>Party:</strong> " + rep.party);
+  $("#rep-phone").html("<strong>Phone:</strong> " + rep.phone);
+  $("#rep-website").html("<strong>Website:</strong> " + rep.website);
+  $("#rep-twitter").html("<strong>Twitter:</strong> " + rep.twitter_id);
+  $("#rep-display").removeClass("hidden");
+  $("#no-rep-results").addClass("hidden");
+};
+
+var hideRep = exports.hideRep = function hideRep() {
+  $("#rep-display").addClass("hidden");
+  $("#no-rep-results").removeClass("hidden");
+};
+
+/***/ }),
+/* 2 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
 exports.hideResults = exports.retrieveDistrict = undefined;
 
 var _map_setup = __webpack_require__(0);
@@ -198,7 +227,7 @@ var hideResults = exports.hideResults = function hideResults() {
 exports.default = retrieveDistrict;
 
 /***/ }),
-/* 2 */
+/* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -206,9 +235,9 @@ exports.default = retrieveDistrict;
 
 var _map_setup = __webpack_require__(0);
 
-var _zip_finder = __webpack_require__(1);
+var _zip_finder = __webpack_require__(2);
 
-var _rep_display = __webpack_require__(3);
+var _rep_display = __webpack_require__(1);
 
 window.initMap = _map_setup.initMap;
 
@@ -223,31 +252,6 @@ $(function () {
     return false;
   });
 });
-
-/***/ }),
-/* 3 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-var displayRep = exports.displayRep = function displayRep(rep) {
-  $("#rep-name").text("Your rep is " + rep.first_name + " " + rep.last_name);
-  $("#rep-party").html("<strong>Party:</strong> " + rep.party);
-  $("#rep-phone").html("<strong>Phone:</strong> " + rep.phone);
-  $("#rep-website").html("<strong>Website:</strong> " + rep.website);
-  $("#rep-twitter").html("<strong>Twitter:</strong> " + rep.twitter_id);
-  $("#rep-display").removeClass("hidden");
-  $("#no-rep-results").addClass("hidden");
-};
-
-var hideRep = exports.hideRep = function hideRep() {
-  $("#rep-display").addClass("hidden");
-  $("#no-rep-results").removeClass("hidden");
-};
 
 /***/ })
 /******/ ]);
