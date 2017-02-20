@@ -22,6 +22,7 @@ const fetchAndAdd = (feature) => {
     }).catch(err => console.log(err));
 };
 
+
 const updateData = obj => {
   return new Promise((resolve, reject) => {
     obj.features.forEach( feat => fetchAndAdd(feat));

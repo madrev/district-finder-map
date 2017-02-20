@@ -76,7 +76,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.geocode = exports.initMap = undefined;
+exports.selectFeature = exports.geocode = exports.initMap = undefined;
 
 var _rep_display = __webpack_require__(1);
 
@@ -97,8 +97,8 @@ var initMap = exports.initMap = function initMap() {
     mapTypeControl: false
   });
 
-  var dataUrl = 'https://raw.githubusercontent.com/madrev/sister_district_sandbox/master/reps_added.json';
-  map.data.loadGeoJson(dataUrl, null, hideOverlay);
+  var dataUrl = 'https://raw.githubusercontent.com/sisterdistricttech/web-widgets/master/districts_with_ids.json';
+  map.data.loadGeoJson(dataUrl, { idPropertyName: "ID" }, hideOverlay);
 
   map.data.setStyle(function (feature) {
     var color = 'gray';
@@ -134,7 +134,6 @@ var zoomTo = function zoomTo(lat, lng) {
   map.setCenter(loc);
   map.setZoom(12);
 };
-window.zoomTo = zoomTo;
 
 var geocoder = new google.maps.Geocoder();
 
@@ -144,6 +143,11 @@ var geocode = exports.geocode = function geocode(zip) {
     var lng = res[0].geometry.location.lng();
     zoomTo(lat, lng);
   });
+};
+
+var selectFeature = exports.selectFeature = function selectFeature(state, district) {
+  var idString = state + (parseInt(district) < 10 ? "0" + district : district);
+  return map.data.getFeatureById(idString);
 };
 
 /***/ }),
@@ -201,6 +205,7 @@ var appendResults = function appendResults(res) {
 
   if (jsonResults.count === "1") {
     var result = jsonResults.results;
+    selectDistrict(result.state, result.district);
     districtText = $("<p class='district-text'></p>").text("Your district is " + result.state + "-" + (result.district === '0' ? 'at-large' : result.district) + ".");
   } else if (jsonResults.count === "0") {
     districtText = $("<p></p>").text("We couldn't find districts for that ZIP code. Please check your entry and try again.");

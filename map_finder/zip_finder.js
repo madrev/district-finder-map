@@ -1,4 +1,4 @@
-import { geocoder } from "./map_setup.js";
+import { geocoder, selectFeature } from "./map_setup.js";
 
 export const retrieveDistrict = zip => (
     $.ajax({
@@ -14,6 +14,7 @@ const appendResults = res => {
 
   if(jsonResults.count === "1") {
     let result = jsonResults.results;
+    selectDistrict(result.state, result.district);
     districtText = $("<p class='district-text'></p>").text(
       `Your district is ${result.state}-${(result.district === '0' ? 'at-large' : result.district)}.`);
   } else if(jsonResults.count === "0") {
@@ -33,6 +34,7 @@ const appendResults = res => {
   $("#district-results").html(districtText);
   $("#district-results").removeClass("hidden");
 };
+
 
 export const hideResults = () => {
   $("#district-results").addClass("hidden");

@@ -14,8 +14,8 @@ export const initMap = () => {
     mapTypeControl: false,
   });
 
-  let dataUrl = 'https://raw.githubusercontent.com/madrev/sister_district_sandbox/master/reps_added.json';
-  map.data.loadGeoJson(dataUrl, null, hideOverlay);
+  let dataUrl = 'https://raw.githubusercontent.com/sisterdistricttech/web-widgets/master/districts_with_ids.json';
+  map.data.loadGeoJson(dataUrl, { idPropertyName: "ID" }, hideOverlay);
 
   map.data.setStyle( feature => {
     let color = 'gray';
@@ -53,7 +53,6 @@ const zoomTo = (lat, lng) => {
   map.setCenter(loc);
   map.setZoom(12);
 }
-window.zoomTo = zoomTo;
 
 const geocoder = new google.maps.Geocoder();
 
@@ -63,4 +62,9 @@ export const geocode = zip => {
     let lng = res[0].geometry.location.lng();
     zoomTo(lat, lng);
   });
+};
+
+export const selectFeature = (state, district) => {
+  let idString = state + (parseInt(district) < 10 ? "0"+district : district);
+  return map.data.getFeatureById(idString);
 };
