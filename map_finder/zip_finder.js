@@ -1,37 +1,63 @@
 import { geocoder, selectFeature } from "./map_setup.js";
+import { displayRep, hideRep } from "./rep_display.js";
 
 export const retrieveDistrict = zip => (
     $.ajax({
       method: "GET",
       url: `https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20json%20where%20url%3D%22https%3A%2F%2Fcongress.api.sunlightfoundation.com%2Fdistricts%2Flocate%3Fzip%3D${zip}%22&format=json&diagnostics=true&callback=`,
-      success: res => appendResults(res)
+      success: res => handleResults(res)
     })
   );
 
-const appendResults = res => {
+const handleResults = res => {
   let jsonResults = res.query.results.json;
-  let districtText;
+  let resultCount = jsonResults.count;
 
-  if(jsonResults.count === "1") {
-    let result = jsonResults.results;
-    selectDistrict(result.state, result.district);
-    districtText = $("<p class='district-text'></p>").text(
-      `Your district is ${result.state}-${(result.district === '0' ? 'at-large' : result.district)}.`);
-  } else if(jsonResults.count === "0") {
-    districtText = $("<p></p>").text(`We couldn't find districts for that ZIP code. Please check your entry and try again.`);
+  if(resultCount === "1") {
+    handleSingleResult(jsonResults.results);
+  } else if(resultCount === "0") {
+    handleNoResults();
   } else {
     let resultArr = jsonResults.results;
-    districtText = $("<div></div>").html(`
-      <p>Your ZIP code crosses ${jsonResults.count} districts:</p>
-    `);
-    let districtList = $("<ul></ul>");
-    resultArr.forEach(result => districtList.append(`<li>${result.state}-${result.district}</li>`));
-    districtText.append(districtList);
-    let mapReferenceText = $("<p></p>").text(`Click on your neighborhood on the map to reveal your district.`);
-    districtText.append(mapReferenceText);
+    handleMultipleResults(resultArr, resultCount);
   }
 
-  $("#district-results").html(districtText);
+};
+
+const handleSingleResult = result => {
+  let feature = selectFeature(result.state, result.district);
+  displayRep(feature.getProperty("REP"));
+
+  let resultText = $("<p class='district-text'></p>").text(
+    `Your district is ${result.state}-${(result.district === '0' ? 'at-large' : result.district)}.`);
+    appendResults(resultText);
+};
+
+
+const handleNoResults = () => {
+  hideRep();
+  let resultText = $("<p></p>").text(`We couldn't find districts for that ZIP code. Please check your entry and try again.`);
+  appendResults(resultText);
+};
+
+const handleMultipleResults = (resultArr, resultCount) => {
+  hideRep();
+  let resultText = $("<div></div>").html(`
+    <p>Your ZIP code crosses ${resultCount} districts:</p>
+  `);
+  let districtList = $("<ul></ul>");
+  resultArr.forEach(result => districtList.append(`<li>${result.state}-${result.district}</li>`));
+  resultText.append(districtList);
+
+  let mapReferenceText = $("<p></p>").text(`Click on your neighborhood on the map to reveal your district.`);
+  resultText.append(mapReferenceText);
+
+  appendResults(resultText);
+};
+
+
+const appendResults = text => {
+  $("#district-results").html(text);
   $("#district-results").removeClass("hidden");
 };
 

@@ -189,39 +189,63 @@ exports.hideResults = exports.retrieveDistrict = undefined;
 
 var _map_setup = __webpack_require__(0);
 
+var _rep_display = __webpack_require__(1);
+
 var retrieveDistrict = exports.retrieveDistrict = function retrieveDistrict(zip) {
   return $.ajax({
     method: "GET",
     url: "https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20json%20where%20url%3D%22https%3A%2F%2Fcongress.api.sunlightfoundation.com%2Fdistricts%2Flocate%3Fzip%3D" + zip + "%22&format=json&diagnostics=true&callback=",
     success: function success(res) {
-      return appendResults(res);
+      return handleResults(res);
     }
   });
 };
 
-var appendResults = function appendResults(res) {
+var handleResults = function handleResults(res) {
   var jsonResults = res.query.results.json;
-  var districtText = void 0;
+  var resultCount = jsonResults.count;
 
-  if (jsonResults.count === "1") {
-    var result = jsonResults.results;
-    selectDistrict(result.state, result.district);
-    districtText = $("<p class='district-text'></p>").text("Your district is " + result.state + "-" + (result.district === '0' ? 'at-large' : result.district) + ".");
-  } else if (jsonResults.count === "0") {
-    districtText = $("<p></p>").text("We couldn't find districts for that ZIP code. Please check your entry and try again.");
+  if (resultCount === "1") {
+    handleSingleResult(jsonResults.results);
+  } else if (resultCount === "0") {
+    handleNoResults();
   } else {
     var resultArr = jsonResults.results;
-    districtText = $("<div></div>").html("\n      <p>Your ZIP code crosses " + jsonResults.count + " districts:</p>\n    ");
-    var districtList = $("<ul></ul>");
-    resultArr.forEach(function (result) {
-      return districtList.append("<li>" + result.state + "-" + result.district + "</li>");
-    });
-    districtText.append(districtList);
-    var mapReferenceText = $("<p></p>").text("Click on your neighborhood on the map to reveal your district.");
-    districtText.append(mapReferenceText);
+    handleMultipleResults(resultArr, resultCount);
   }
+};
 
-  $("#district-results").html(districtText);
+var handleSingleResult = function handleSingleResult(result) {
+  var feature = (0, _map_setup.selectFeature)(result.state, result.district);
+  (0, _rep_display.displayRep)(feature.getProperty("REP"));
+
+  var resultText = $("<p class='district-text'></p>").text("Your district is " + result.state + "-" + (result.district === '0' ? 'at-large' : result.district) + ".");
+  appendResults(resultText);
+};
+
+var handleNoResults = function handleNoResults() {
+  (0, _rep_display.hideRep)();
+  var resultText = $("<p></p>").text("We couldn't find districts for that ZIP code. Please check your entry and try again.");
+  appendResults(resultText);
+};
+
+var handleMultipleResults = function handleMultipleResults(resultArr, resultCount) {
+  (0, _rep_display.hideRep)();
+  var resultText = $("<div></div>").html("\n    <p>Your ZIP code crosses " + resultCount + " districts:</p>\n  ");
+  var districtList = $("<ul></ul>");
+  resultArr.forEach(function (result) {
+    return districtList.append("<li>" + result.state + "-" + result.district + "</li>");
+  });
+  resultText.append(districtList);
+
+  var mapReferenceText = $("<p></p>").text("Click on your neighborhood on the map to reveal your district.");
+  resultText.append(mapReferenceText);
+
+  appendResults(resultText);
+};
+
+var appendResults = function appendResults(text) {
+  $("#district-results").html(text);
   $("#district-results").removeClass("hidden");
 };
 
@@ -253,7 +277,6 @@ $(function () {
     var zip = e.target.zip.value;
     (0, _map_setup.geocode)(String(zip));
     (0, _zip_finder.retrieveDistrict)(zip);
-    (0, _rep_display.hideRep)();
     return false;
   });
 });
