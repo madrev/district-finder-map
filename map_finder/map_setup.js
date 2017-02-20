@@ -46,13 +46,33 @@ export const initMap = () => {
   });
 
 
+  window.showNonPolygons = () => {
+    map.data.forEach( feat => {
+      let type = feat.getGeometry().getType();
+      if(type !== "Polygon") {
+        console.log(feat.getProperty("ID"));
+        console.log(feat.getGeometry().getType());
+      }
+    });
+  };
+
+
 };
 
 const zoomTo = (lat, lng) => {
   let loc = new google.maps.LatLng(lat, lng);
   map.setCenter(loc);
   map.setZoom(12);
-}
+};
+
+export const fitTo = feature => {
+  let bounds = new google.maps.LatLngBounds();
+  let geo = feature.getGeometry();
+  geo.forEachLatLng( (latlng) => {
+    bounds.extend(latlng);
+  });
+  map.fitBounds(bounds);
+};
 
 const geocoder = new google.maps.Geocoder();
 

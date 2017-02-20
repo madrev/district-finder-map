@@ -11,7 +11,6 @@ $( () => {
   $("form").submit((e) => {
       e.preventDefault();
       let zip = e.target.zip.value;
-      geocode(String(zip));
       retrieveDistrict(zip);
       return false;
     });

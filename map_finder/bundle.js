@@ -76,7 +76,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.selectFeature = exports.geocode = exports.initMap = undefined;
+exports.selectFeature = exports.geocode = exports.fitTo = exports.initMap = undefined;
 
 var _rep_display = __webpack_require__(1);
 
@@ -127,12 +127,31 @@ var initMap = exports.initMap = function initMap() {
     (0, _rep_display.displayRep)(event.feature.f["REP"]);
     (0, _zip_finder.hideResults)();
   });
+
+  window.showNonPolygons = function () {
+    map.data.forEach(function (feat) {
+      var type = feat.getGeometry().getType();
+      if (type !== "Polygon") {
+        console.log(feat.getProperty("ID"));
+        console.log(feat.getGeometry().getType());
+      }
+    });
+  };
 };
 
 var zoomTo = function zoomTo(lat, lng) {
   var loc = new google.maps.LatLng(lat, lng);
   map.setCenter(loc);
   map.setZoom(12);
+};
+
+var fitTo = exports.fitTo = function fitTo(feature) {
+  var bounds = new google.maps.LatLngBounds();
+  var geo = feature.getGeometry();
+  geo.forEachLatLng(function (latlng) {
+    bounds.extend(latlng);
+  });
+  map.fitBounds(bounds);
 };
 
 var geocoder = new google.maps.Geocoder();
@@ -196,13 +215,14 @@ var retrieveDistrict = exports.retrieveDistrict = function retrieveDistrict(zip)
     method: "GET",
     url: "https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20json%20where%20url%3D%22https%3A%2F%2Fcongress.api.sunlightfoundation.com%2Fdistricts%2Flocate%3Fzip%3D" + zip + "%22&format=json&diagnostics=true&callback=",
     success: function success(res) {
-      return handleResults(res);
+      return handleResults(res, zip);
     }
   });
 };
 
-var handleResults = function handleResults(res) {
+var handleResults = function handleResults(res, zip) {
   var jsonResults = res.query.results.json;
+  console.log(jsonResults);
   var resultCount = jsonResults.count;
 
   if (resultCount === "1") {
@@ -211,12 +231,15 @@ var handleResults = function handleResults(res) {
     handleNoResults();
   } else {
     var resultArr = jsonResults.results;
-    handleMultipleResults(resultArr, resultCount);
+    handleMultipleResults(resultArr, resultCount, zip);
   }
 };
 
 var handleSingleResult = function handleSingleResult(result) {
   var feature = (0, _map_setup.selectFeature)(result.state, result.district);
+  console.log(feature);
+  window.feature = feature;
+  (0, _map_setup.fitTo)(feature);
   (0, _rep_display.displayRep)(feature.getProperty("REP"));
 
   var resultText = $("<p class='district-text'></p>").text("Your district is " + result.state + "-" + (result.district === '0' ? 'at-large' : result.district) + ".");
@@ -229,7 +252,9 @@ var handleNoResults = function handleNoResults() {
   appendResults(resultText);
 };
 
-var handleMultipleResults = function handleMultipleResults(resultArr, resultCount) {
+var handleMultipleResults = function handleMultipleResults(resultArr, resultCount, zip) {
+  (0, _map_setup.geocode)(String(zip));
+
   (0, _rep_display.hideRep)();
   var resultText = $("<div></div>").html("\n    <p>Your ZIP code crosses " + resultCount + " districts:</p>\n  ");
   var districtList = $("<ul></ul>");
@@ -275,7 +300,6 @@ $(function () {
   $("form").submit(function (e) {
     e.preventDefault();
     var zip = e.target.zip.value;
-    (0, _map_setup.geocode)(String(zip));
     (0, _zip_finder.retrieveDistrict)(zip);
     return false;
   });

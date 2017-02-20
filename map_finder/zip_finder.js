@@ -1,16 +1,17 @@
-import { geocoder, selectFeature } from "./map_setup.js";
+import { geocoder, geocode, selectFeature, fitTo } from "./map_setup.js";
 import { displayRep, hideRep } from "./rep_display.js";
 
 export const retrieveDistrict = zip => (
     $.ajax({
       method: "GET",
       url: `https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20json%20where%20url%3D%22https%3A%2F%2Fcongress.api.sunlightfoundation.com%2Fdistricts%2Flocate%3Fzip%3D${zip}%22&format=json&diagnostics=true&callback=`,
-      success: res => handleResults(res)
+      success: res => handleResults(res, zip)
     })
   );
 
-const handleResults = res => {
+const handleResults = (res, zip) => {
   let jsonResults = res.query.results.json;
+  console.log(jsonResults);
   let resultCount = jsonResults.count;
 
   if(resultCount === "1") {
@@ -19,13 +20,16 @@ const handleResults = res => {
     handleNoResults();
   } else {
     let resultArr = jsonResults.results;
-    handleMultipleResults(resultArr, resultCount);
+    handleMultipleResults(resultArr, resultCount, zip);
   }
 
 };
 
 const handleSingleResult = result => {
   let feature = selectFeature(result.state, result.district);
+  console.log(feature);
+  window.feature = feature;
+  fitTo(feature);
   displayRep(feature.getProperty("REP"));
 
   let resultText = $("<p class='district-text'></p>").text(
@@ -40,7 +44,10 @@ const handleNoResults = () => {
   appendResults(resultText);
 };
 
-const handleMultipleResults = (resultArr, resultCount) => {
+const handleMultipleResults = (resultArr, resultCount, zip) => {
+  geocode(String(zip));
+
+
   hideRep();
   let resultText = $("<div></div>").html(`
     <p>Your ZIP code crosses ${resultCount} districts:</p>
