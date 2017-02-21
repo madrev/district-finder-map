@@ -76,11 +76,16 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.selectFeature = exports.geocode = exports.fitTo = exports.initMap = undefined;
+exports.selectFeature = exports.geocode = exports.styleActive = exports.fitTo = exports.initMap = undefined;
 
 var _rep_display = __webpack_require__(1);
 
 var _zip_finder = __webpack_require__(2);
+
+var partyColor = function partyColor(feature) {
+  var rep = feature.getProperty("REP");
+  if (!rep) return "gray";else if (rep.party === "D") return "blue";else if (rep.party === "R") return "red";
+};
 
 var hideOverlay = function hideOverlay() {
   window.setTimeout(function () {
@@ -101,16 +106,8 @@ var initMap = exports.initMap = function initMap() {
   map.data.loadGeoJson(dataUrl, { idPropertyName: "ID" }, hideOverlay);
 
   map.data.setStyle(function (feature) {
-    var color = 'gray';
-    if (feature.f["REP"]) {
-      if (feature.f["REP"].party === "D") {
-        color = "blue";
-      } else if (feature.f["REP"].party === "R") {
-        color = "red";
-      }
-    }
     return {
-      fillColor: color,
+      fillColor: partyColor(feature),
       strokeWeight: 0.35
     };
   });
@@ -119,6 +116,7 @@ var initMap = exports.initMap = function initMap() {
 
   map.data.addListener('click', function (event) {
     window.feature = event.feature;
+    styleActive(event.feature);
     var districtNum = event.feature.f["CD115FP"];
     var districtType = districtNum == "00" ? "at large" : 'District ' + districtNum;
     infowindow.setPosition(event.latLng);
@@ -127,16 +125,6 @@ var initMap = exports.initMap = function initMap() {
     (0, _rep_display.displayRep)(event.feature.f["REP"]);
     (0, _zip_finder.hideResults)();
   });
-
-  window.showNonPolygons = function () {
-    map.data.forEach(function (feat) {
-      var type = feat.getGeometry().getType();
-      if (type !== "Polygon") {
-        console.log(feat.getProperty("ID"));
-        console.log(feat.getGeometry().getType());
-      }
-    });
-  };
 };
 
 var zoomTo = function zoomTo(lat, lng) {
@@ -146,12 +134,23 @@ var zoomTo = function zoomTo(lat, lng) {
 };
 
 var fitTo = exports.fitTo = function fitTo(feature) {
+  styleActive(feature);
   var bounds = new google.maps.LatLngBounds();
   var geo = feature.getGeometry();
   geo.forEachLatLng(function (latlng) {
     bounds.extend(latlng);
   });
+  var boundsLiteral = bounds.toJSON();
   map.fitBounds(bounds);
+};
+
+var styleActive = exports.styleActive = function styleActive(feature) {
+  map.data.revertStyle();
+  map.data.overrideStyle(feature, {
+    strokeColor: partyColor(feature),
+    strokeWeight: 2,
+    fillOpacity: 0.1
+  });
 };
 
 var geocoder = new google.maps.Geocoder();

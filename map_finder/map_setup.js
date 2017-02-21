@@ -1,6 +1,13 @@
 import { displayRep } from './rep_display.js';
 import { hideResults } from './zip_finder.js';
 
+const partyColor = feature  => {
+  let rep = feature.getProperty("REP");
+  if(!rep) return "gray";
+  else if(rep.party === "D") return "blue";
+  else if(rep.party === "R") return "red";
+};
+
 const hideOverlay = () => {
   window.setTimeout( () => $("#overlay").remove(), 1000 );
 };
@@ -17,44 +24,27 @@ export const initMap = () => {
   let dataUrl = 'https://raw.githubusercontent.com/sisterdistricttech/web-widgets/master/districts_with_ids.json';
   map.data.loadGeoJson(dataUrl, { idPropertyName: "ID" }, hideOverlay);
 
-  map.data.setStyle( feature => {
-    let color = 'gray';
-    if(feature.f["REP"]) {
-      if(feature.f["REP"].party === "D") {
-        color="blue";
-      } else if(feature.f["REP"].party === "R"){
-        color="red";
-      }
-    }
-    return {
-      fillColor: color,
+  map.data.setStyle( feature => (
+    {
+      fillColor: partyColor(feature),
       strokeWeight: 0.35
-    };
-  });
+    }
+  ));
 
   const infowindow = new google.maps.InfoWindow;
 
   map.data.addListener('click', function(event) {
-  window.feature = event.feature;
-  let districtNum = event.feature.f["CD115FP"];
-  let districtType = (districtNum == "00" ? "at large" : `District ${districtNum}`);
-  infowindow.setPosition(event.latLng);
-  infowindow.setContent(`${event.feature.f["STATE"]} ${districtType}`);
-  infowindow.open(map);
-  displayRep(event.feature.f["REP"]);
-  hideResults();
+    window.feature = event.feature;
+    styleActive(event.feature);
+    let districtNum = event.feature.f["CD115FP"];
+    let districtType = (districtNum == "00" ? "at large" : `District ${districtNum}`);
+    infowindow.setPosition(event.latLng);
+    infowindow.setContent(`${event.feature.f["STATE"]} ${districtType}`);
+    infowindow.open(map);
+    displayRep(event.feature.f["REP"]);
+    hideResults();
   });
 
-
-  window.showNonPolygons = () => {
-    map.data.forEach( feat => {
-      let type = feat.getGeometry().getType();
-      if(type !== "Polygon") {
-        console.log(feat.getProperty("ID"));
-        console.log(feat.getGeometry().getType());
-      }
-    });
-  };
 
 
 };
@@ -66,12 +56,23 @@ const zoomTo = (lat, lng) => {
 };
 
 export const fitTo = feature => {
+  styleActive(feature);
   let bounds = new google.maps.LatLngBounds();
   let geo = feature.getGeometry();
   geo.forEachLatLng( (latlng) => {
     bounds.extend(latlng);
   });
+  let boundsLiteral = bounds.toJSON();
   map.fitBounds(bounds);
+};
+
+export const styleActive = feature => {
+  map.data.revertStyle();
+  map.data.overrideStyle(feature, {
+    strokeColor: partyColor(feature),
+    strokeWeight: 2,
+    fillOpacity: 0.1
+  });
 };
 
 const geocoder = new google.maps.Geocoder();
