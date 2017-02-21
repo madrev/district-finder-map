@@ -11,7 +11,6 @@ export const retrieveDistrict = zip => (
 
 const handleResults = (res, zip) => {
   let jsonResults = res.query.results.json;
-  console.log(jsonResults);
   let resultCount = jsonResults.count;
 
   if(resultCount === "1") {
