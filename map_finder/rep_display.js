@@ -1,4 +1,5 @@
 export const displayRep = rep => {
+  window.rep = rep;
   if(!rep) {
     $("#rep-name").html(`This congressional seat is currently vacant.`);
     $("#rep-details").addClass("hidden");
@@ -8,8 +9,13 @@ export const displayRep = rep => {
     $("#rep-phone").html(`${rep.phone}`);
     $("#rep-website").html(`${rep.website}`);
     $("#rep-website").attr("href", `${rep.website}`);
-    $("#rep-twitter").html(`${rep.twitter_id}`);
-    $("#rep-twitter").attr("href", `https://www.twitter.com/${rep.twitter_id}`);
+    if(rep.twitter_id) {
+      $("#rep-twitter").html(`${rep.twitter_id}`);
+      $("#rep-twitter").attr("href", `https://www.twitter.com/${rep.twitter_id}`);
+    } else {
+      $("#rep-twitter").html(`Not Available`);
+      $("#rep-twitter").removeAttr("href");
+    }
     $("#rep-details").removeClass("hidden");
   }
   $("#rep-display").removeClass("hidden");

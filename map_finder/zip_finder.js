@@ -26,7 +26,6 @@ const handleResults = (res, zip) => {
 
 const handleSingleResult = result => {
   let feature = selectFeature(result.state, result.district);
-  console.log(feature);
   window.feature = feature;
   fitTo(feature);
   displayRep(feature.getProperty("REP"));

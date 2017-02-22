@@ -76,9 +76,48 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+var displayRep = exports.displayRep = function displayRep(rep) {
+  window.rep = rep;
+  if (!rep) {
+    $("#rep-name").html("This congressional seat is currently vacant.");
+    $("#rep-details").addClass("hidden");
+  } else {
+    $("#rep-name").text("Your rep is " + rep.first_name + " " + rep.last_name);
+    $("#rep-party").html("" + rep.party);
+    $("#rep-phone").html("" + rep.phone);
+    $("#rep-website").html("" + rep.website);
+    $("#rep-website").attr("href", "" + rep.website);
+    if (rep.twitter_id) {
+      $("#rep-twitter").html("" + rep.twitter_id);
+      $("#rep-twitter").attr("href", "https://www.twitter.com/" + rep.twitter_id);
+    } else {
+      $("#rep-twitter").html("Not Available");
+      $("#rep-twitter").removeAttr("href");
+    }
+    $("#rep-details").removeClass("hidden");
+  }
+  $("#rep-display").removeClass("hidden");
+  $("#no-rep-results").addClass("hidden");
+};
+
+var hideRep = exports.hideRep = function hideRep() {
+  $("#rep-display").addClass("hidden");
+  $("#no-rep-results").removeClass("hidden");
+};
+
+/***/ }),
+/* 1 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
 exports.selectFeature = exports.geocode = exports.styleActive = exports.fitTo = exports.initMap = undefined;
 
-var _rep_display = __webpack_require__(1);
+var _rep_display = __webpack_require__(0);
 
 var _zip_finder = __webpack_require__(2);
 
@@ -171,39 +210,6 @@ var selectFeature = exports.selectFeature = function selectFeature(state, distri
 };
 
 /***/ }),
-/* 1 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-var displayRep = exports.displayRep = function displayRep(rep) {
-  if (!rep) {
-    $("#rep-name").html("This congressional seat is currently vacant.");
-    $("#rep-details").addClass("hidden");
-  } else {
-    $("#rep-name").text("Your rep is " + rep.first_name + " " + rep.last_name);
-    $("#rep-party").html("" + rep.party);
-    $("#rep-phone").html("" + rep.phone);
-    $("#rep-website").html("" + rep.website);
-    $("#rep-website").attr("href", "" + rep.website);
-    $("#rep-twitter").html("" + rep.twitter_id);
-    $("#rep-twitter").attr("href", "https://www.twitter.com/" + rep.twitter_id);
-    $("#rep-details").removeClass("hidden");
-  }
-  $("#rep-display").removeClass("hidden");
-  $("#no-rep-results").addClass("hidden");
-};
-
-var hideRep = exports.hideRep = function hideRep() {
-  $("#rep-display").addClass("hidden");
-  $("#no-rep-results").removeClass("hidden");
-};
-
-/***/ }),
 /* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -215,9 +221,9 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.hideResults = exports.setResultText = exports.retrieveDistrict = undefined;
 
-var _map_setup = __webpack_require__(0);
+var _map_setup = __webpack_require__(1);
 
-var _rep_display = __webpack_require__(1);
+var _rep_display = __webpack_require__(0);
 
 var retrieveDistrict = exports.retrieveDistrict = function retrieveDistrict(zip) {
   return $.ajax({
@@ -245,7 +251,6 @@ var handleResults = function handleResults(res, zip) {
 
 var handleSingleResult = function handleSingleResult(result) {
   var feature = (0, _map_setup.selectFeature)(result.state, result.district);
-  console.log(feature);
   window.feature = feature;
   (0, _map_setup.fitTo)(feature);
   (0, _rep_display.displayRep)(feature.getProperty("REP"));
@@ -295,11 +300,11 @@ exports.default = retrieveDistrict;
 "use strict";
 
 
-var _map_setup = __webpack_require__(0);
+var _map_setup = __webpack_require__(1);
 
 var _zip_finder = __webpack_require__(2);
 
-var _rep_display = __webpack_require__(1);
+var _rep_display = __webpack_require__(0);
 
 window.initMap = _map_setup.initMap;
 
