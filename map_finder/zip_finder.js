@@ -33,14 +33,14 @@ const handleSingleResult = result => {
 
   let resultText = $("<p class='district-text'></p>").text(
     `Your district is ${result.state}-${(result.district === '0' ? 'at-large' : result.district)}.`);
-    appendResults(resultText);
+    setResultText(resultText);
 };
 
 
 const handleNoResults = () => {
   hideRep();
   let resultText = $("<p></p>").text(`We couldn't find districts for that ZIP code. Please check your entry and try again.`);
-  appendResults(resultText);
+  setResultText(resultText);
 };
 
 const handleMultipleResults = (resultArr, resultCount, zip) => {
@@ -58,11 +58,11 @@ const handleMultipleResults = (resultArr, resultCount, zip) => {
   let mapReferenceText = $("<p></p>").text(`Click on your neighborhood on the map to reveal your district.`);
   resultText.append(mapReferenceText);
 
-  appendResults(resultText);
+  setResultText(resultText);
 };
 
 
-const appendResults = text => {
+export const setResultText = text => {
   $("#district-results").html(text);
   $("#district-results").removeClass("hidden");
 };

@@ -1,5 +1,5 @@
 import { displayRep } from './rep_display.js';
-import { hideResults } from './zip_finder.js';
+import { setResultText, hideResults } from './zip_finder.js';
 
 const partyColor = feature  => {
   let rep = feature.getProperty("REP");
@@ -34,15 +34,17 @@ export const initMap = () => {
   const infowindow = new google.maps.InfoWindow;
 
   map.data.addListener('click', function(event) {
-    window.feature = event.feature;
-    styleActive(event.feature);
-    let districtNum = event.feature.f["CD115FP"];
+    let feature = event.feature;
+    styleActive(feature);
+    let districtNum = feature.f["CD115FP"];
     let districtType = (districtNum == "00" ? "at large" : `District ${districtNum}`);
     infowindow.setPosition(event.latLng);
-    infowindow.setContent(`${event.feature.f["STATE"]} ${districtType}`);
+    console.log(event.latLng);
+    infowindow.setContent(`${feature.f["STATE"]} ${districtType}`);
     infowindow.open(map);
-    displayRep(event.feature.f["REP"]);
+    displayRep(feature.f["REP"]);
     hideResults();
+    // setResultText(`You have selected ${feature.getProperty("ID").slice(0,2)}-${districtType}`);
   });
 
 

@@ -4,10 +4,12 @@ export const displayRep = rep => {
     $("#rep-details").addClass("hidden");
   } else {
     $("#rep-name").text(`Your rep is ${rep.first_name} ${rep.last_name}`);
-    $("#rep-party").html(`<strong>Party:</strong> ${rep.party}`);
-    $("#rep-phone").html(`<strong>Phone:</strong> ${rep.phone}`);
-    $("#rep-website").html(`<strong>Website:</strong> ${rep.website}`);
-    $("#rep-twitter").html(`<strong>Twitter:</strong> ${rep.twitter_id}`);
+    $("#rep-party").html(`${rep.party}`);
+    $("#rep-phone").html(`${rep.phone}`);
+    $("#rep-website").html(`${rep.website}`);
+    $("#rep-website").attr("href", `${rep.website}`);
+    $("#rep-twitter").html(`${rep.twitter_id}`);
+    $("#rep-twitter").attr("href", `https://www.twitter.com/${rep.twitter_id}`);
     $("#rep-details").removeClass("hidden");
   }
   $("#rep-display").removeClass("hidden");

@@ -115,15 +115,17 @@ var initMap = exports.initMap = function initMap() {
   var infowindow = new google.maps.InfoWindow();
 
   map.data.addListener('click', function (event) {
-    window.feature = event.feature;
-    styleActive(event.feature);
-    var districtNum = event.feature.f["CD115FP"];
+    var feature = event.feature;
+    styleActive(feature);
+    var districtNum = feature.f["CD115FP"];
     var districtType = districtNum == "00" ? "at large" : 'District ' + districtNum;
     infowindow.setPosition(event.latLng);
-    infowindow.setContent(event.feature.f["STATE"] + ' ' + districtType);
+    console.log(event.latLng);
+    infowindow.setContent(feature.f["STATE"] + ' ' + districtType);
     infowindow.open(map);
-    (0, _rep_display.displayRep)(event.feature.f["REP"]);
+    (0, _rep_display.displayRep)(feature.f["REP"]);
     (0, _zip_finder.hideResults)();
+    // setResultText(`You have selected ${feature.getProperty("ID").slice(0,2)}-${districtType}`);
   });
 };
 
@@ -184,10 +186,12 @@ var displayRep = exports.displayRep = function displayRep(rep) {
     $("#rep-details").addClass("hidden");
   } else {
     $("#rep-name").text("Your rep is " + rep.first_name + " " + rep.last_name);
-    $("#rep-party").html("<strong>Party:</strong> " + rep.party);
-    $("#rep-phone").html("<strong>Phone:</strong> " + rep.phone);
-    $("#rep-website").html("<strong>Website:</strong> " + rep.website);
-    $("#rep-twitter").html("<strong>Twitter:</strong> " + rep.twitter_id);
+    $("#rep-party").html("" + rep.party);
+    $("#rep-phone").html("" + rep.phone);
+    $("#rep-website").html("" + rep.website);
+    $("#rep-website").attr("href", "" + rep.website);
+    $("#rep-twitter").html("" + rep.twitter_id);
+    $("#rep-twitter").attr("href", "https://www.twitter.com/" + rep.twitter_id);
     $("#rep-details").removeClass("hidden");
   }
   $("#rep-display").removeClass("hidden");
@@ -209,7 +213,7 @@ var hideRep = exports.hideRep = function hideRep() {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.hideResults = exports.retrieveDistrict = undefined;
+exports.hideResults = exports.setResultText = exports.retrieveDistrict = undefined;
 
 var _map_setup = __webpack_require__(0);
 
@@ -247,13 +251,13 @@ var handleSingleResult = function handleSingleResult(result) {
   (0, _rep_display.displayRep)(feature.getProperty("REP"));
 
   var resultText = $("<p class='district-text'></p>").text("Your district is " + result.state + "-" + (result.district === '0' ? 'at-large' : result.district) + ".");
-  appendResults(resultText);
+  setResultText(resultText);
 };
 
 var handleNoResults = function handleNoResults() {
   (0, _rep_display.hideRep)();
   var resultText = $("<p></p>").text("We couldn't find districts for that ZIP code. Please check your entry and try again.");
-  appendResults(resultText);
+  setResultText(resultText);
 };
 
 var handleMultipleResults = function handleMultipleResults(resultArr, resultCount, zip) {
@@ -270,10 +274,10 @@ var handleMultipleResults = function handleMultipleResults(resultArr, resultCoun
   var mapReferenceText = $("<p></p>").text("Click on your neighborhood on the map to reveal your district.");
   resultText.append(mapReferenceText);
 
-  appendResults(resultText);
+  setResultText(resultText);
 };
 
-var appendResults = function appendResults(text) {
+var setResultText = exports.setResultText = function setResultText(text) {
   $("#district-results").html(text);
   $("#district-results").removeClass("hidden");
 };
