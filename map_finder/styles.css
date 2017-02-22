@@ -46,6 +46,13 @@ input[type="text"]{
   justify-content: center;
 }
 
+#info, #about {
+
+
+
+}
+
+
 #info {
   position: absolute;
   top: 15px;
