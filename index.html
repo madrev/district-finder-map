@@ -18,6 +18,7 @@
         <h3>Loading map...</h3>
         <img src="./frontend/spinner.svg"></img>
       </div>
+      <div id="overlaid-content">
       <section id="info">
         <section id="zip-box">
           <form id="zip-entry">
@@ -42,9 +43,22 @@
           </div>
         </section>
       </section>
-      <section id="about" class="">
-        <h1> blah blah </h1>
+      <button id="about-button">About</button>
+      <section id="about-container" class="hidden">
+        <div id="about">
+          <h1>Thanks for coming by!</h1>
+          <p>This congressional district finder is a stand-alone version of a web widget built for the fine folks at <a href="https://www.sisterdistrict.com/" target="=_blank">Sister District Project.</a>  You'll see a version of this on their live site soon!</p>
+          <h5>About this site</h5>
+          <p>This site began a single jQuery-powered button hitting the <a href="https://sunlightlabs.github.io/congress/" target="=_blank">Sunlight Congress API</a>, and has grown to include the Google Maps Javascript API and lots of vanilla JS. The map's data layer was built using data from <a href="https://catalog.data.gov/dataset/tiger-line-shapefile-2016-nation-u-s-115th-congressional-district-national" target="=_blank">the U.S. Census Bureau</a>, converted to GeoJSON with <a href="http://mapshaper.org/" target="=_blank">Mapshaper</a>, and populated with representative data using the Congress API once again.</p>
+          <p>If you have feature suggestions or bug reports, please <a href="https://github.com/madrev/district-finder-map" target="_blank">raise an issue on GitHub.</a></p>
+          <h5>About Sister District Project</h5>
+          <p>SDP is a grassroots initiative to pair solidly blue congressional districts with flippable red ones, with the goal of bringing sanity to the House in 2018. They're supporting lots of critical state and local races this year, so check them out!</p>
+          <h5>About me</h5>
+          <p>I'm a software developer with a product management background, based in San Francisco. My specialty is full-stack web apps in Rails, React and Redux. I'm looking for full-time opportunities and cool projects to contribute to. Drop me a line : <i>maddierevill (at) gmail.com. </i></p>
+
+        </div>
       </section>
+      <div>
   </div>
   </body>
 </html>

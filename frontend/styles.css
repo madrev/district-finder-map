@@ -19,6 +19,18 @@ input[type="text"]{
   box-sizing: border-box;
 }
 
+::webkit-scrollbar-track {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+h1, h2, h3, h4, h5, h6, p {
+  margin-bottom: 0.5em;
+}
+
+p {
+  margin-top: 0;
+}
+
 .hidden {
   display: none;
 }
@@ -46,29 +58,59 @@ input[type="text"]{
   justify-content: center;
 }
 
-#info, #about {
+#overlaid-content {
   position: absolute;
   top: 15px;
   bottom: 15px;
+  left: 15px;
+  right: 15px;
   z-index: 1;
+  display: flex;
+  flex-direction: row;
+  pointer-events: none;
+
+}
+
+#info, #about-container, #about-button {
   padding: 20px;
   background-color: rgba(237, 236, 232, 0.8);
   border-radius: 5px;
-  width: 300px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  pointer-events: all;
+}
+
+#about-button {
+  border: none;
+  font-size: 16px;
+  padding: 10px 20px;
 }
 
 
 #info {
-  left: 15px;
+  min-width: 300px;
+  width:300px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  box-sizing: border-box;
+  margin-right: 30px;
+}
+
+#about-container{
+  overflow: auto;
+}
+
+#about-button {
+  position: absolute;
+  top: 0;
+  right: 0;
+
 }
 
 #about {
-  right: 15px;
+  margin: 15px;
 }
+
 
 
 #zip-box {
