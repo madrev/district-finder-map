@@ -4,11 +4,11 @@
     <title>Map Sandbox</title>
     <meta name="viewport" content="initial-scale=1.0">
     <meta charset="utf-8">
-    <link rel="stylesheet" href="./styles.css" type="text/css"/>
+    <link rel="stylesheet" href="./frontend/styles.css" type="text/css"/>
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA_Lemsbtgnzq6Nvu60PEce6A8AbpHvQQA"></script>
-    <script async defer src="./bundle.js" type="text/javascript"></script>
-    <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+    <script async defer src="./frontend/bundle.js" type="text/javascript"></script>
+    <!-- <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script> -->
   </head>
 
   <body>
@@ -16,7 +16,7 @@
       <div id="map"></div>
       <div id="overlay">
         <h3>Loading map...</h3>
-        <img src="./spinner.svg"></img>
+        <img src="./frontend/spinner.svg"></img>
       </div>
       <section id="info">
         <section id="zip-box">
@@ -36,13 +36,14 @@
               <p><strong>Party: </strong><span id="rep-party"></span></p>
               <p><strong>Phone: </strong><span id="rep-phone"></span></p>
               <p><strong>Website: </strong><a target="_blank" id="rep-website"></a></p>
-              <p><strong>Twitter: </strong><a target="_blank" id="rep-twitter"></a><span id="twitter-button"></span></p>
+              <p><strong>Twitter: </strong><a target="_blank" id="rep-twitter"></a><span id="twitter-button" class="hidden"></span></p>
 
             </div>
           </div>
         </section>
       </section>
-      <section id="about" class="hidden">
+      <section id="about" class="">
+        <h1> blah blah </h1>
       </section>
   </div>
   </body>

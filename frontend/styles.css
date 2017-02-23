@@ -47,26 +47,27 @@ input[type="text"]{
 }
 
 #info, #about {
-
-
-
-}
-
-
-#info {
   position: absolute;
   top: 15px;
-  left: 15px;
   bottom: 15px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
   z-index: 1;
   padding: 20px;
   background-color: rgba(237, 236, 232, 0.8);
   border-radius: 5px;
   width: 300px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+
+#info {
+  left: 15px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+#about {
+  right: 15px;
 }
 
 
