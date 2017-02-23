@@ -1,6 +1,6 @@
 import { initMap, geocode } from "./map_setup.js";
 import { retrieveDistrict } from "./zip_finder.js";
-import { hideRep } from "./rep_display.js";
+import { showAbout, hideAbout } from "./about_display.js";
 
 window.initMap = initMap;
 
@@ -14,4 +14,6 @@ $( () => {
       retrieveDistrict(zip);
       return false;
     });
+  $("#about-button").click(showAbout);
+  $("#close-button").click(hideAbout);
   });

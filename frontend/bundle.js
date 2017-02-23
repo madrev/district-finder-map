@@ -63,7 +63,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 3);
+/******/ 	return __webpack_require__(__webpack_require__.s = 4);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -76,57 +76,11 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-var displayRep = exports.displayRep = function displayRep(rep) {
-  if (!rep) {
-    $("#rep-name").html("This congressional seat is currently vacant.");
-    $("#rep-details").addClass("hidden");
-  } else {
-    generateTwitterButton(rep);
-    $("#rep-name").text("Your rep is " + rep.first_name + " " + rep.last_name);
-    $("#rep-party").html("" + rep.party);
-    $("#rep-phone").html("" + rep.phone);
-    $("#rep-website").html("" + rep.website);
-    $("#rep-website").attr("href", "" + rep.website);
-    $("#rep-details").removeClass("hidden");
-  }
-  $("#rep-display").removeClass("hidden");
-  $("#no-rep-results").addClass("hidden");
-};
-
-var generateTwitterButton = function generateTwitterButton(rep) {
-  if (rep.twitter_id) {
-    $("#rep-twitter").html("" + rep.twitter_id);
-    $("#rep-twitter").attr("href", "https://www.twitter.com/" + rep.twitter_id);
-    // Skipping the twitter button until I can find a way to improve latency
-    // $("#twitter-button").html(` <a href="https://twitter.com/${rep.twitter_id}" class="twitter-follow-button" data-show-count="false" data-show-screen-name="false">Follow</a>`);
-    // twttr.widgets.load($("#twitter-button").get(0));
-  } else {
-    $("#rep-twitter").html("Not Available");
-    $("#rep-twitter").removeAttr("href");
-    $("#twitter-button").empty();
-  }
-};
-
-var hideRep = exports.hideRep = function hideRep() {
-  $("#rep-display").addClass("hidden");
-  $("#no-rep-results").removeClass("hidden");
-};
-
-/***/ }),
-/* 1 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
 exports.selectFeature = exports.geocode = exports.styleActive = exports.fitTo = exports.initMap = undefined;
 
-var _rep_display = __webpack_require__(0);
+var _rep_display = __webpack_require__(2);
 
-var _zip_finder = __webpack_require__(2);
+var _zip_finder = __webpack_require__(1);
 
 var partyColor = function partyColor(feature) {
   var rep = feature.getProperty("REP");
@@ -217,7 +171,7 @@ var selectFeature = exports.selectFeature = function selectFeature(state, distri
 };
 
 /***/ }),
-/* 2 */
+/* 1 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -228,9 +182,9 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.hideResults = exports.setResultText = exports.retrieveDistrict = undefined;
 
-var _map_setup = __webpack_require__(1);
+var _map_setup = __webpack_require__(0);
 
-var _rep_display = __webpack_require__(0);
+var _rep_display = __webpack_require__(2);
 
 var retrieveDistrict = exports.retrieveDistrict = function retrieveDistrict(zip) {
   return $.ajax({
@@ -301,17 +255,87 @@ var hideResults = exports.hideResults = function hideResults() {
 exports.default = retrieveDistrict;
 
 /***/ }),
+/* 2 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+var displayRep = exports.displayRep = function displayRep(rep) {
+  if (!rep) {
+    $("#rep-name").html("This congressional seat is currently vacant.");
+    $("#rep-details").addClass("hidden");
+  } else {
+    generateTwitterButton(rep);
+    $("#rep-name").text("Your rep is " + rep.first_name + " " + rep.last_name);
+    $("#rep-party").html("" + rep.party);
+    $("#rep-phone").html("" + rep.phone);
+    $("#rep-website").html("" + rep.website);
+    $("#rep-website").attr("href", "" + rep.website);
+    $("#rep-details").removeClass("hidden");
+  }
+  $("#rep-display").removeClass("hidden");
+  $("#no-rep-results").addClass("hidden");
+};
+
+var generateTwitterButton = function generateTwitterButton(rep) {
+  if (rep.twitter_id) {
+    $("#rep-twitter").html("" + rep.twitter_id);
+    $("#rep-twitter").attr("href", "https://www.twitter.com/" + rep.twitter_id);
+    // Skipping the twitter button until I can find a way to improve latency
+    // $("#twitter-button").html(` <a href="https://twitter.com/${rep.twitter_id}" class="twitter-follow-button" data-show-count="false" data-show-screen-name="false">Follow</a>`);
+    // twttr.widgets.load($("#twitter-button").get(0));
+  } else {
+    $("#rep-twitter").html("Not Available");
+    $("#rep-twitter").removeAttr("href");
+    $("#twitter-button").empty();
+  }
+};
+
+var hideRep = exports.hideRep = function hideRep() {
+  $("#rep-display").addClass("hidden");
+  $("#no-rep-results").removeClass("hidden");
+};
+
+/***/ }),
 /* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var _map_setup = __webpack_require__(1);
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+var showAbout = exports.showAbout = function showAbout(e) {
+  e.preventDefault();
+  $("#about-button").addClass("hidden");
+  $("#about-container").removeClass("hidden");
+  return false;
+};
 
-var _zip_finder = __webpack_require__(2);
+var hideAbout = exports.hideAbout = function hideAbout(e) {
+  e.preventDefault();
+  $("#about-container").addClass("hidden");
+  $("#about-button").removeClass("hidden");
+  return false;
+};
 
-var _rep_display = __webpack_require__(0);
+/***/ }),
+/* 4 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _map_setup = __webpack_require__(0);
+
+var _zip_finder = __webpack_require__(1);
+
+var _about_display = __webpack_require__(3);
 
 window.initMap = _map_setup.initMap;
 
@@ -323,6 +347,8 @@ $(function () {
     (0, _zip_finder.retrieveDistrict)(zip);
     return false;
   });
+  $("#about-button").click(_about_display.showAbout);
+  $("#close-button").click(_about_display.hideAbout);
 });
 
 /***/ })

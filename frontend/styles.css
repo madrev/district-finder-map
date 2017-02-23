@@ -19,9 +19,6 @@ input[type="text"]{
   box-sizing: border-box;
 }
 
-::webkit-scrollbar-track {
-  background-color: rgba(0, 0, 0, 0.1);
-}
 
 h1, h2, h3, h4, h5, h6, p {
   margin-bottom: 0.5em;
@@ -79,10 +76,16 @@ p {
   pointer-events: all;
 }
 
-#about-button {
+#about-button, #close-button {
+  position: absolute;
   border: none;
   font-size: 16px;
   padding: 10px 20px;
+}
+
+#about-button {
+  top: 0;
+  right: 0;
 }
 
 
@@ -100,11 +103,13 @@ p {
   overflow: auto;
 }
 
-#about-button {
-  position: absolute;
-  top: 0;
-  right: 0;
 
+#close-button {
+  top:15px;
+  right: 15px;
+  border: none;
+  background-color:  rgba(255, 0, 0, 0);
+  box-shadow: none;
 }
 
 #about {
