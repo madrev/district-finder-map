@@ -3,7 +3,7 @@
 [Click here for the live project.][live-link]
 
 
-This congressional district finder is a stand-alone version of a web widget built for the fine folks at [Sister District Project][sd]. You'll see a version of this on their site soon!
+This congressional district finder is a stand-alone version of a web widget built for the fine folks at [Sister District Project][sd].
 
 
 [sd]: https://www.sisterdistrict.com/
